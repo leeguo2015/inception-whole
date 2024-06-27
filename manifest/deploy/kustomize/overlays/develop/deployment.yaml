@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inception-whole
+spec:
+  template:
+    spec:
+      containers:
+        - name : main
+          image: inception-whole:develop

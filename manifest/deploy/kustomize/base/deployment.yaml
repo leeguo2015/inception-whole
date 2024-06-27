@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inception-whole
+  labels:
+    app: inception-whole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inception-whole
+  template:
+    metadata:
+      labels:
+        app: inception-whole
+    spec:
+      containers:
+        - name : main
+          image: inception-whole
+          imagePullPolicy: Always
+
