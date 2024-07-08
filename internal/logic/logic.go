@@ -18,4 +18,7 @@ import (
 	_ "inception-whole/internal/logic/setting"
 	_ "inception-whole/internal/logic/user"
 	_ "inception-whole/internal/logic/view"
+
+	_ "inception-whole/internal/logic/api_category"
+
 )

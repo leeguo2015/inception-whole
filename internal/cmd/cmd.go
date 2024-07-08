@@ -3,13 +3,16 @@ package cmd
 import (
 	"context"
 
+	"inception-whole/internal/controller"
+	"inception-whole/internal/service"
+
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/net/goai"
 	"github.com/gogf/gf/v2/os/gcmd"
 	"github.com/gogf/gf/v2/text/gstr"
-	"inception-whole/internal/controller"
-	"inception-whole/internal/service"
+	"github.com/gogf/gf/v2/util/gmode"
+
 	// "github.com/gogf/gf/v2/util/gmode"
 
 	"inception-whole/internal/consts"
@@ -40,11 +43,11 @@ var (
 			s.AddStaticPath("/upload", uploadPath)
 
 			// HOOK, 开发阶段禁止浏览器缓存,方便调试
-			// if gmode.IsDevelop() {
-			// 	s.BindHookHandler("/*", ghttp.HookBeforeServe, func(r *ghttp.Request) {
-			// 		r.Response.Header().Set("Cache-Control", "no-store")
-			// 	})
-			// }
+			if gmode.IsDevelop() {
+				s.BindHookHandler("/*", ghttp.HookBeforeServe, func(r *ghttp.Request) {
+					r.Response.Header().Set("Cache-Control", "no-store")
+				})
+			}
 
 			// 前台系统自定义错误页面
 			s.BindStatusHandler(401, func(r *ghttp.Request) {
@@ -97,6 +100,19 @@ var (
 					)
 				})
 			})
+
+			s.Group("/v1/api", func(group *ghttp.RouterGroup) {
+				group.Middleware(service.MiddlewareCORS)
+				// group.Middleware(
+				// 	service.Middleware().Ctx,
+				// )
+				group.Middleware(ghttp.MiddlewareHandlerResponse)
+				group.Bind(
+					controller.APICategory, // 栏目
+				)
+
+			})
+
 			// 自定义丰富文档
 			enhanceOpenAPIDoc(s)
 			// 启动Http Server

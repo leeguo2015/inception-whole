@@ -4,10 +4,11 @@ import (
 	"context"
 	"time"
 
+	"inception-whole/internal/service"
+
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/os/gcache"
 	"github.com/gogf/gf/v2/util/gconv"
-	"inception-whole/internal/service"
 
 	"inception-whole/internal/dao"
 	"inception-whole/internal/model"
@@ -17,10 +18,12 @@ import (
 type sCategory struct{}
 
 const (
-	mapCacheKey       = "category_map_cache"
-	mapCacheDuration  = time.Hour
-	treeCacheKey      = "category_tree_cache"
-	treeCacheDuration = time.Hour
+	mapCacheKey            = "category_map_cache"
+	mapCacheDuration       = time.Hour
+	treeCacheKey           = "category_tree_cache"
+	treeCacheDuration      = time.Hour
+	inceptionCacheDuration = time.Hour
+	inceptionCacheKey      = "incepation_tree_cache"
 )
 
 func init() {
@@ -161,4 +164,45 @@ func (s *sCategory) GetMap(ctx context.Context) (map[uint]*entity.Category, erro
 	)
 	err = v.Scan(&result)
 	return result, err
+}
+
+// GetTree 查询列表
+func (s *sCategory) GetALL(ctx context.Context) ([]*model.CategoryInceptionItem, error) {
+	// 缓存控制
+	var (
+		cacheKey  = inceptionCacheKey
+		cacheFunc = func(ctx context.Context) (interface{}, error) {
+			entities, err := s.GetList(ctx)
+			if err != nil {
+				return nil, err
+			}
+			tree, err := s.formIncepation(entities)
+			if err != nil {
+				return nil, err
+			}
+			return tree, nil
+		}
+	)
+	v, err := gcache.GetOrSetFunc(ctx, cacheKey, cacheFunc, inceptionCacheDuration)
+	if err != nil {
+		return nil, err
+	}
+	var (
+		result []*model.CategoryInceptionItem
+	)
+	err = v.Scan(&result)
+	return result, err
+}
+
+func (s *sCategory) formIncepation(entities []*entity.Category) ([]*model.CategoryInceptionItem, error) {
+	tree := make([]*model.CategoryInceptionItem, 0)
+	for _, entity := range entities {
+		tree = append(tree, &model.CategoryInceptionItem{
+			Id:      entity.Id,
+			Name:    entity.Name,
+			Content: entity.Brief,
+		})
+
+	}
+	return tree, nil
 }

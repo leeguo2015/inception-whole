@@ -24,3 +24,11 @@ func Middleware() IMiddleware {
 func RegisterMiddleware(i IMiddleware) {
 	localMiddleware = i
 }
+
+// 允许跨域请求中间件
+func MiddlewareCORS(r *ghttp.Request) {
+	corsOptions := r.Response.DefaultCORSOptions()
+	corsOptions.AllowDomain = []string{"*"}
+	r.Response.CORS(corsOptions)
+	r.Middleware.Next()
+}

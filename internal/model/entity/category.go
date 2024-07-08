@@ -23,3 +23,10 @@ type Category struct {
 	CreatedAt   *gtime.Time `json:"createdAt"   description:"创建时间"`
 	UpdatedAt   *gtime.Time `json:"updatedAt"   description:"修改时间"`
 }
+
+type CategoryInception struct {
+	Id          uint        `json:"id"          description:"分类ID，自增主键"`
+	ContentType string      `json:"contentType" description:"内容类型：topic, ask, article, reply"`
+	Name        string      `json:"name"        description:"分类名称"`
+	Brief       string      `json:"brief"       description:"简述"`
+}

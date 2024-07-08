@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 
-	"inception-whole/api/v1"
+	v1 "inception-whole/api/v1"
 	"inception-whole/internal/service"
 )
 
