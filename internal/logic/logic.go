@@ -20,5 +20,6 @@ import (
 	_ "inception-whole/internal/logic/view"
 
 	_ "inception-whole/internal/logic/api_category"
+	_ "inception-whole/internal/logic/api_article"
 
 )

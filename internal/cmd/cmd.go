@@ -109,6 +109,7 @@ var (
 				group.Middleware(ghttp.MiddlewareHandlerResponse)
 				group.Bind(
 					controller.APICategory, // 栏目
+					controller.APIArticle, // 栏目
 				)
 
 			})

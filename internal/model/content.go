@@ -1,8 +1,9 @@
 package model
 
 import (
-	"github.com/gogf/gf/v2/os/gtime"
 	"inception-whole/internal/model/entity"
+
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 // ContentGetListInput 获取内容列表

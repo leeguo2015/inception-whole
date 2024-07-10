@@ -167,7 +167,7 @@ func (s *sCategory) GetMap(ctx context.Context) (map[uint]*entity.Category, erro
 }
 
 // GetTree 查询列表
-func (s *sCategory) GetALL(ctx context.Context) ([]*model.CategoryInceptionItem, error) {
+func (s *sCategory) GetALL(ctx context.Context) ([]*model.APICategoryItem, error) {
 	// 缓存控制
 	var (
 		cacheKey  = inceptionCacheKey
@@ -188,16 +188,16 @@ func (s *sCategory) GetALL(ctx context.Context) ([]*model.CategoryInceptionItem,
 		return nil, err
 	}
 	var (
-		result []*model.CategoryInceptionItem
+		result []*model.APICategoryItem
 	)
 	err = v.Scan(&result)
 	return result, err
 }
 
-func (s *sCategory) formIncepation(entities []*entity.Category) ([]*model.CategoryInceptionItem, error) {
-	tree := make([]*model.CategoryInceptionItem, 0)
+func (s *sCategory) formIncepation(entities []*entity.Category) ([]*model.APICategoryItem, error) {
+	tree := make([]*model.APICategoryItem, 0)
 	for _, entity := range entities {
-		tree = append(tree, &model.CategoryInceptionItem{
+		tree = append(tree, &model.APICategoryItem{
 			Id:      entity.Id,
 			Name:    entity.Name,
 			Content: entity.Brief,

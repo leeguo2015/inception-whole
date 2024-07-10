@@ -38,7 +38,7 @@ func (s *APISCategory) GetList(ctx context.Context) (list []*entity.Category, er
 }
 
 // GetTree 查询列表
-func (s *APISCategory) GetALL(ctx context.Context) ([]*model.CategoryInceptionItem, error) {
+func (s *APISCategory) GetALL(ctx context.Context) ([]*model.APICategoryItem, error) {
 	// 缓存控制
 	var (
 		cacheKey  = inceptionCacheKey
@@ -59,16 +59,16 @@ func (s *APISCategory) GetALL(ctx context.Context) ([]*model.CategoryInceptionIt
 		return nil, err
 	}
 	var (
-		result []*model.CategoryInceptionItem
+		result []*model.APICategoryItem
 	)
 	err = v.Scan(&result)
 	return result, err
 }
 
-func (s *APISCategory) formIncepation(entities []*entity.Category) ([]*model.CategoryInceptionItem, error) {
-	tree := make([]*model.CategoryInceptionItem, 0)
+func (s *APISCategory) formIncepation(entities []*entity.Category) ([]*model.APICategoryItem, error) {
+	tree := make([]*model.APICategoryItem, 0)
 	for _, entity := range entities {
-		tree = append(tree, &model.CategoryInceptionItem{
+		tree = append(tree, &model.APICategoryItem{
 			Id:      entity.Id,
 			Name:    entity.Name,
 			Content: entity.Brief,

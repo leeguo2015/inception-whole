@@ -14,12 +14,11 @@ var APICategory = APICCategory{}
 
 type APICCategory struct{}
 
-func (a *APICCategory) ALL(ctx context.Context, req *v2.CategoryInceptionListReq) (res *v2.CategoryInceptionListRes, err error) {
-	res = &v2.CategoryInceptionListRes{}
+func (a *APICCategory) ALL(ctx context.Context, req *v2.APICategoryListReq) (res *v2.APICategoryListRes, err error) {
+	res = &v2.APICategoryListRes{}
 	res.List, err = service.APICategory().GetALL(ctx)
 	if err != nil {
 		glog.Error(ctx, err)
 	}
-	glog.Debug(ctx, res)
 	return
 }
