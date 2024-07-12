@@ -4,9 +4,11 @@ import (
 	"context"
 
 	"inception-whole/internal/dao"
+	"inception-whole/internal/logic/api_category"
 	"inception-whole/internal/model"
-	"inception-whole/internal/model/entity"
 	"inception-whole/internal/service"
+
+	"github.com/gogf/gf/v2/os/glog"
 )
 
 type APISAriticle struct{}
@@ -25,14 +27,12 @@ func (s *APISAriticle) GetList(ctx context.Context, in model.APIContentGetListIn
 	var (
 		m = dao.Content.Ctx(ctx)
 	)
-
+	if in.Size == 0 {
+		in.Size = 10
+	}
 	out = &model.APIContentGetListOutput{
 		Page: in.Page,
 		Size: in.Size,
-	}
-
-	if in.Type != "" {
-		m = m.Where(dao.Content.Columns().Type, in.Type)
 	}
 	if len(in.CategoryIDs) > 0 {
 		m = m.WhereIn(dao.Content.Columns().CategoryId, in.CategoryIDs)
@@ -40,17 +40,9 @@ func (s *APISAriticle) GetList(ctx context.Context, in model.APIContentGetListIn
 	if in.Type != "" {
 		m = m.Where(dao.Content.Columns().Type, in.Type)
 	}
-	listModel := m.Page(in.Page, in.Size)
+	m.Fields("LEFT(content, 100) AS content")
 
-	// 执行查询
-	var list []*entity.Content
-	if err := listModel.Scan(&list); err != nil {
-		return out, err
-	}
-	// 没有数据
-	if len(list) == 0 {
-		return out, nil
-	}
+	listModel := m.Page(in.Page, in.Size)
 	out.Total, err = m.Count()
 	if err != nil {
 		return out, err
@@ -59,5 +51,41 @@ func (s *APISAriticle) GetList(ctx context.Context, in model.APIContentGetListIn
 	if err := listModel.ScanList(&out.List, "Content"); err != nil {
 		return out, err
 	}
-	return nil, nil
+	categories, err := api_category.New().GetALL(ctx)
+	if err != nil {
+		return out, err
+	}
+	for i := 0; i < len(out.List); i++ {
+		for _, category := range categories {
+			if category.Id == out.List[i].Content.CategoryId {
+				out.List[i].Category = category
+				break
+			}
+		}
+	}
+	return
+}
+
+func (s *APISAriticle) Detail(ctx context.Context, in model.APIContentGetDetailInput) (out *model.APIContentGetDetailOutput, err error) {
+	glog.Debug(ctx, in.ID)
+
+	var (
+		m = dao.Content.Ctx(ctx)
+	)
+	out = &model.APIContentGetDetailOutput{
+		Content:  &model.APIContentListItem{},
+		Category: &model.APICategoryItem{},
+	}
+	m = m.Where(dao.Content.Columns().Id, in.ID)
+	if err := m.Scan(&out.Content); err != nil {
+		return out, err
+	}
+	glog.Debug(ctx, in.ID)
+	glog.Debug(ctx, "out.Content", out.Content)
+
+	// err = m.Scan(out.Content)
+	if err != nil {
+		return nil, err
+	}
+	return
 }

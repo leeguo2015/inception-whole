@@ -1,4 +1,4 @@
-package category
+package api_category
 
 import (
 	"context"

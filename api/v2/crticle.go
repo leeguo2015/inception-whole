@@ -20,3 +20,14 @@ type APIArticleListRes struct {
 	Size  int                            `json:"size" description:"分页数量"`
 	Total int                            `json:"total" description:"数据总数"`
 }
+
+type APIArticleDetailReq struct {
+	g.Meta `path:"/aritcle/detail" method:"get" tags:"博客" summary:"获取博客列表" dc:"获取博客列表"`
+	ID     int
+}
+
+type APIArticleDetailRes struct {
+	// *model.APIContentGetDetailOutput
+	Content  *model.APIContentListItem `json:"content"`
+	Category *model.APICategoryItem    `json:"category"`
+}
