@@ -46,8 +46,8 @@ func (a *APICArticle) Detail(ctx context.Context, req *v2.APIArticleDetailReq) (
 		return nil, err
 	}
 	res = &v2.APIArticleDetailRes{
-		Category :data.Category,
-		Content : data.Content,
+		Category: data.Category,
+		Content:  data.Content,
 	}
 	// res.Category = data.Category
 	// res.Content = data.Content

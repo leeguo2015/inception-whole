@@ -11,7 +11,7 @@ import (
 )
 
 type APIICategory interface {
-	GetALL(ctx context.Context)  (list []*model.APICategoryItem, err error)
+	GetALL(ctx context.Context, Type string)  (list []*model.APICategoryItem, err error)
 }
 
 var localAPIICategory APIICategory

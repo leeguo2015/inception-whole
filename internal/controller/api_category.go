@@ -16,7 +16,7 @@ type APICCategory struct{}
 
 func (a *APICCategory) ALL(ctx context.Context, req *v2.APICategoryListReq) (res *v2.APICategoryListRes, err error) {
 	res = &v2.APICategoryListRes{}
-	res.List, err = service.APICategory().GetALL(ctx)
+	res.List, err = service.APICategory().GetALL(ctx, req.Type)
 	if err != nil {
 		glog.Error(ctx, err)
 	}

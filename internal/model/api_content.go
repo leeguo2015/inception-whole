@@ -1,11 +1,15 @@
-
 package model
 
-import "github.com/gogf/gf/v2/os/gtime"
+import (
+	"inception-whole/internal/model/entity"
+
+	"github.com/gogf/gf/v2/os/gtime"
+)
 
 type APIContentGetListItem struct {
-	Content  *APIContentListItem `json:"content"`
+	Content  *APIContentListItem `json:"blog"`
 	Category *APICategoryItem    `json:"category"`
+	User     *entity.User		`json:"user"`
 }
 
 type APIContentGetListOutput struct {

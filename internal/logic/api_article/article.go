@@ -1,4 +1,4 @@
-package api_aritcle
+package api_article
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"inception-whole/internal/dao"
 	"inception-whole/internal/logic/api_category"
 	"inception-whole/internal/model"
+	"inception-whole/internal/model/entity"
 	"inception-whole/internal/service"
 
 	"github.com/gogf/gf/v2/os/glog"
@@ -51,18 +52,32 @@ func (s *APISAriticle) GetList(ctx context.Context, in model.APIContentGetListIn
 	if err := listModel.ScanList(&out.List, "Content"); err != nil {
 		return out, err
 	}
-	categories, err := api_category.New().GetALL(ctx)
+	categories, err := api_category.New().GetList(ctx, "")
 	if err != nil {
 		return out, err
 	}
 	for i := 0; i < len(out.List); i++ {
 		for _, category := range categories {
 			if category.Id == out.List[i].Content.CategoryId {
-				out.List[i].Category = category
+				out.List[i].Category = &model.APICategoryItem{
+					Id:      category.Id,
+					Name:    category.Name,
+					Content: category.Content,
+					Brief:   category.Brief,
+				}
 				break
 			}
 		}
+		// user :=
+		glog.Debug(ctx, "out.List[i].Content.UserId", out.List[i].Content.UserId)
+		u := &entity.User{}
+		if err := dao.User.Ctx(ctx).Where(dao.User.Columns().Id, out.List[i].Content.UserId).Scan(u); err != nil {
+			glog.Error(ctx, err)
+		}
+		out.List[i].User = u
+
 	}
+
 	return
 }
 

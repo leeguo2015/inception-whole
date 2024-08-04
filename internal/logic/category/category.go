@@ -167,7 +167,8 @@ func (s *sCategory) GetMap(ctx context.Context) (map[uint]*entity.Category, erro
 }
 
 // GetTree 查询列表
-func (s *sCategory) GetALL(ctx context.Context) ([]*model.APICategoryItem, error) {
+func (s *sCategory) GetALL(ctx context.Context, Type string) ([]*model.APICategoryItem, error) {
+	// if Type == 
 	// 缓存控制
 	var (
 		cacheKey  = inceptionCacheKey

@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 
-	"inception-whole/api/v1"
+	v1 "inception-whole/api/v1"
 	"inception-whole/internal/model"
 	"inception-whole/internal/service"
 )
@@ -58,6 +58,7 @@ func (a *cContent) ShowUpdate(ctx context.Context, req *v1.ContentShowUpdateReq)
 			ContentType: getDetailRes.Content.Type,
 			CategoryId:  getDetailRes.Content.CategoryId,
 		}),
+		MainTpl: "/index/content/update.html",
 	})
 	return
 }

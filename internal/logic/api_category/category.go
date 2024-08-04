@@ -29,21 +29,24 @@ func New() *APISCategory {
 }
 
 // GetList 获得所有的栏目列表。
-func (s *APISCategory) GetList(ctx context.Context) (list []*entity.Category, err error) {
-	err = dao.Category.Ctx(ctx).
+func (s *APISCategory) GetList(ctx context.Context, Type string) (list []*entity.Category, err error) {
+	d := dao.Category.Ctx(ctx).
 		OrderAsc(dao.Category.Columns().Sort).
-		OrderAsc(dao.Category.Columns().Id).
-		Scan(&list)
+		OrderAsc(dao.Category.Columns().Id)
+	if Type != "" {
+		d = d.Where(dao.Category.Columns().ContentType, Type)
+	}
+	err = d.Scan(&list)
 	return
 }
 
 // GetTree 查询列表
-func (s *APISCategory) GetALL(ctx context.Context) ([]*model.APICategoryItem, error) {
+func (s *APISCategory) GetALL(ctx context.Context, Type string) ([]*model.APICategoryItem, error) {
 	// 缓存控制
 	var (
-		cacheKey  = inceptionCacheKey
+		cacheKeyT = inceptionCacheKey + Type
 		cacheFunc = func(ctx context.Context) (interface{}, error) {
-			entities, err := s.GetList(ctx)
+			entities, err := s.GetList(ctx, Type)
 			if err != nil {
 				return nil, err
 			}
@@ -54,7 +57,7 @@ func (s *APISCategory) GetALL(ctx context.Context) ([]*model.APICategoryItem, er
 			return tree, nil
 		}
 	)
-	v, err := gcache.GetOrSetFunc(ctx, cacheKey, cacheFunc, inceptionCacheDuration)
+	v, err := gcache.GetOrSetFunc(ctx, cacheKeyT, cacheFunc, inceptionCacheDuration)
 	if err != nil {
 		return nil, err
 	}

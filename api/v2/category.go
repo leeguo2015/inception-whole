@@ -8,6 +8,7 @@ import (
 
 type APICategoryListReq struct {
 	g.Meta `path:"/category" method:"get" tags:"分类" summary:"获取分类列表InceptionList" dc:"获取所有分类列表"`
+	Type   string //获取类型
 }
 
 type APICategoryListRes struct {

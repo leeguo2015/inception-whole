@@ -2,12 +2,13 @@ package v2
 
 import (
 	"inception-whole/internal/model"
+	"inception-whole/internal/model/entity"
 
 	"github.com/gogf/gf/v2/frame/g"
 )
 
 type APIArticleListReq struct {
-	g.Meta      `path:"/aritcle" method:"get" tags:"博客" summary:"获取博客列表" dc:"获取博客列表"`
+	g.Meta      `path:"/article" method:"get" tags:"博客" summary:"获取博客列表" dc:"获取博客列表"`
 	Type        string
 	CategoryIDs []int // 栏目ID
 	Page        int
@@ -22,12 +23,13 @@ type APIArticleListRes struct {
 }
 
 type APIArticleDetailReq struct {
-	g.Meta `path:"/aritcle/detail" method:"get" tags:"博客" summary:"获取博客列表" dc:"获取博客列表"`
+	g.Meta `path:"/article/detail" method:"get" tags:"博客" summary:"获取博客列表" dc:"获取博客列表"`
 	ID     int
 }
 
 type APIArticleDetailRes struct {
 	// *model.APIContentGetDetailOutput
-	Content  *model.APIContentListItem `json:"content"`
+	Content  *model.APIContentListItem `json:"blog"`
 	Category *model.APICategoryItem    `json:"category"`
+	User     *entity.User              `json:"user"`
 }
