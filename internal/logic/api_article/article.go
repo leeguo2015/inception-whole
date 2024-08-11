@@ -49,7 +49,7 @@ func (s *APISAriticle) GetList(ctx context.Context, in model.APIContentGetListIn
 		return out, err
 	}
 	// Content
-	if err := listModel.ScanList(&out.List, "Content"); err != nil {
+	if err := listModel.OrderDesc(dao.Category.Columns().CreatedAt).ScanList(&out.List, "Content"); err != nil {
 		return out, err
 	}
 	categories, err := api_category.New().GetList(ctx, "")
@@ -69,7 +69,7 @@ func (s *APISAriticle) GetList(ctx context.Context, in model.APIContentGetListIn
 			}
 		}
 		// user :=
-		glog.Debug(ctx, "out.List[i].Content.UserId", out.List[i].Content.UserId)
+		// glog.Debug(ctx, "out.List[i].Content.UserId", out.List[i].Content.UserId)
 		u := &entity.User{}
 		if err := dao.User.Ctx(ctx).Where(dao.User.Columns().Id, out.List[i].Content.UserId).Scan(u); err != nil {
 			glog.Error(ctx, err)
